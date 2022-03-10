@@ -15,6 +15,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     const newUser = await User.create({
         name: req.body.name,
         email: req.body.email,
+        role: req.body.role,
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm,
         passwordChangedAt: req.body.passwordChangedAt,
@@ -79,6 +80,25 @@ exports.protect = catchAsync(async (req, res, next) => {
     }
 
     // Access granted
-    res.user = currentUser;
+    req.user = currentUser;
     next();
 });
+
+exports.restrictTo = (...roles) => {
+    return (req, res, next) => {
+        console.log(Object.entries(req));
+        if (!roles.includes(req.user.role))
+            return next(new AppError("You don't have permission to perfom this action"), 403);
+        next();
+    };
+};
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) return next(new AppError('There is no user with the given email', 404));
+
+    const resetToken = User.createPasswordResetToken()
+    await user.save();
+});
+exports.resetPassword = (req, res, next) => {};
