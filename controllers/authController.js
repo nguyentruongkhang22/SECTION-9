@@ -98,7 +98,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     if (!user) return next(new AppError('There is no user with the given email', 404));
 
-    const resetToken = User.createPasswordResetToken()
+    const resetToken = User.createPasswordResetToken();
     await user.save();
 });
 exports.resetPassword = (req, res, next) => {};
