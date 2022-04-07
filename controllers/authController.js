@@ -37,7 +37,7 @@ exports.login = catchAsync(async function (req, res, next) {
 
     // Check if email and password are exist
     if (!email || !password) {
-        next(new AppError('Please provide email and password', 400));
+        return next(new AppError('Please provide email and password', 400));
     }
 
     // Check if user exists && password is correct
@@ -99,6 +99,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     if (!user) return next(new AppError('There is no user with the given email', 404));
 
     const resetToken = User.createPasswordResetToken();
-    await user.save();
+    await user.save({ validateBeforeSave: false });
 });
 exports.resetPassword = (req, res, next) => {};

@@ -1,6 +1,7 @@
 const Tour = require('./../models/tourModel');
 const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
+const User = require('../models/userModel');
 
 exports.getAllUsers = catchAsync(async (req, res) => {
     const users = await User.find();
@@ -8,9 +9,9 @@ exports.getAllUsers = catchAsync(async (req, res) => {
     // SEND RESPONSE
     res.status(200).json({
         status: 'success',
-        results: tours.length,
+        results: users.length,
         data: {
-            tours,
+            users,
         },
     });
 });
