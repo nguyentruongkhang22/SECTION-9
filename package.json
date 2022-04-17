@@ -8,5 +8,8 @@
     "morgan": "^1.10.0",
     "slugify": "^1.6.5",
     "validator": "^13.7.0"
+  },
+  "engines": {
+    "node": ">=10.0.0"
   }
 }
