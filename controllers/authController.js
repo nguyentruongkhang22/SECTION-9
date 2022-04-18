@@ -16,7 +16,17 @@ const signToken = (id) => {
 
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
+  const cookieOptions = {
+    expires: Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 24 * 1000,
+    httpOnly: true,
+  };
 
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  res.cookie('jwt', token);
+
+  // Hide password from output without changing it on database
+  user.password = undefined;
   res.status(200).json({
     status: 'success',
     token: token,
@@ -89,7 +99,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role))
-      return next(new AppError("You don't have permission to perfom this action"), 403);
+      return next(new AppError("You don't have permission to perform this action"), 403);
     next();
   };
 };
